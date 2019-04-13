@@ -1,0 +1,9 @@
+{
+    "name": "AdventureMU",
+    "description": "Un jeu d'aventure à la Mario",
+    "version": "1.0.0",
+    "engines": {
+      "node": "10.3.0"
+    }
+  }
+  
