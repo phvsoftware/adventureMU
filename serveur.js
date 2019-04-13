@@ -2,6 +2,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs')
 var path = require('path');
+var PORT = process.env.PORT || 8080;
 
 var server = http.createServer(function (req, res) {
     var page = url.parse(req.url).pathname;
@@ -53,4 +54,4 @@ var server = http.createServer(function (req, res) {
 
 });
 
-server.listen(8080);
+server.listen(PORT);
