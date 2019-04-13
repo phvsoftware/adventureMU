@@ -38,7 +38,7 @@ var server = http.createServer(function (req, res) {
             break;
     }
 
-    var pagelue = '.././adventureMU' + page;
+    var pagelue = '.' + page;
 
     console.log('page lue : ' +pagelue + ', contentType : ' + contentType);
 
