@@ -6,6 +6,8 @@ let godMod = false;
 let godModKey = 0;
 let reaperPos;
 
+let entraindeperdre = false;
+
 var Level = class Level {
     constructor(plan) {
         let rows = plan.trim().split("\n").map(l => [...l]);
@@ -92,6 +94,10 @@ var Lava = class Lava {
 Lava.prototype.size = new Vec(1, 1);
 
 Lava.prototype.collide = function (state) {
+    console.log("lostpos 1, entraindeperdre = " + entraindeperdre);
+    // test
+    if (entraindeperdre) return new State(state.level, state.actors, "playing");
+
     return new State(state.level, state.actors, "lost");
 };
 
@@ -129,6 +135,10 @@ var Monster = class Monster {
 Monster.prototype.size = new Vec(0.8, 0.9);
 
 Monster.prototype.collide = function (state) {
+    console.log("lostpos 2, entraindeperdre = " + entraindeperdre);
+    // test
+    if (entraindeperdre) return new State(state.level, state.actors, "playing");
+
     return new State(state.level, state.actors, "lost");
 };
 
@@ -226,6 +236,7 @@ Level.prototype.touches = function (pos, size, type) {
             if (here == "savepos") {
                 let pos2 = new Vec(x, y);
                 reaperPos = pos2.plus(new Vec(0, -0.5));
+                console.log("sauvegarde de position");
             }
             if (here == type) return true;
         }
@@ -241,6 +252,7 @@ State.prototype.update = function (time, keys) {
 
     let player = newState.player;
     if (this.level.touches(player.pos, player.size, "lava") && !godMod) {
+        console.log("lostpos 3");
         return new State(this.level, actors, "lost");
     }
 
@@ -496,6 +508,30 @@ function trackKeys(keys) {
 
 var arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
 
+function pressleft() {
+    arrowKeys["ArrowLeft"] = true;
+}
+
+function releaseleft() {
+    arrowKeys["ArrowLeft"] = false;
+}
+
+function pressright() {
+    arrowKeys["ArrowRight"] = true;
+}
+
+function releaseright() {
+    arrowKeys["ArrowRight"] = false;
+}
+
+function pressspace() {
+    arrowKeys["ArrowUp"] = true;
+}
+
+function releasespace() {
+    arrowKeys["ArrowUp"] = false;
+}
+
 function runAnimation(frameFunc) {
     let lastTime = null;
     function frame(time) {
@@ -541,15 +577,18 @@ function runLevel(level, Display) {
                 // return false;
                 
                 // test
+entraindeperdre = true;
+console.log("entraindeperdre => True");
 
                 vie--;
-                console.log("vie=" + vie);
-                if (vie == 0) {
+                console.log("vie = " + vie + " status = " + state.status);
+                if (vie < 0) {
                     state.status = "lost";
                     resolve(state.status);
+entraindeperdre = false;                 
                     return false;
                 } else {
-                    state.status = "playing";
+                    state.status = "playing";                  
                 }
 
                 display.syncState(state);
@@ -564,6 +603,8 @@ function runLevel(level, Display) {
                     }
                     display.syncState(state);
                     i2++;
+entraindeperdre = false;               
+console.log("entraindeperdre => False");     
                 }, 500);
                 return true;
             }
@@ -577,6 +618,7 @@ async function runGame(plans, Display) {
     coinRestant = 0;
     globalLevel = 1;
     godMod = false;
+    entraindeperdre = false;               
     let levelrunning;
     let newLevel = true;
     for (let level = 5; level < plans.length;) {
