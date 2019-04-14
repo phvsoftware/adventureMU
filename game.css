@@ -69,3 +69,18 @@
     display: table;
     margin: 0 auto;
 }
+
+.boutonrond {
+	width:85px;
+	height:85px;
+	background:#cc0000;
+	font:bold 13px Arial;
+	border-radius:50%;
+	border:none;
+    color:#fff;
+    margin: 10px 10px 0 10px;
+}
+
+.boutonrond:active {
+    background: black;
+}
