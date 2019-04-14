@@ -253,6 +253,9 @@ State.prototype.update = function (time, keys) {
     let player = newState.player;
     if (this.level.touches(player.pos, player.size, "lava") && !godMod) {
         console.log("lostpos 3");
+        // test
+        if (entraindeperdre) return new State(this.level, actors, "playing");
+
         return new State(this.level, actors, "lost");
     }
 
@@ -354,7 +357,7 @@ function flipHorizontally(context, around) {
 }
 
 CanvasDisplay.prototype.syncState = function (state) {
-    if (vie > 0) {
+    if (vie >= 0) {
         this.updateViewport(state);
         this.clearDisplay(state.status);
         this.drawBackground(state.level);
@@ -532,6 +535,12 @@ function releasespace() {
     arrowKeys["ArrowUp"] = false;
 }
 
+function releasetouche() {
+    arrowKeys["ArrowLeft"] = false;  
+    arrowKeys["ArrowRight"] = false;
+    arrowKeys["ArrowUp"] = false;
+}
+
 function runAnimation(frameFunc) {
     let lastTime = null;
     function frame(time) {
@@ -579,6 +588,7 @@ function runLevel(level, Display) {
                 // test
 entraindeperdre = true;
 console.log("entraindeperdre => True");
+display.syncState(state);
 
                 vie--;
                 console.log("vie = " + vie + " status = " + state.status);
@@ -591,7 +601,7 @@ entraindeperdre = false;
                     state.status = "playing";                  
                 }
 
-                display.syncState(state);
+                // display.syncState(state);
                 console.log("perdu");
                 let i2 = 0;
                 var interval2 = setInterval(function(){ 
@@ -600,8 +610,9 @@ entraindeperdre = false;
                         state.player.pos = reaperPos;
                         state.player.speed = new Vec(0, 0);
                         state.status = "playing";
+                        display.syncState(state);                        
                     }
-                    display.syncState(state);
+                    // display.syncState(state);
                     i2++;
 entraindeperdre = false;               
 console.log("entraindeperdre => False");     
@@ -629,7 +640,7 @@ async function runGame(plans, Display) {
         if (status == "lost") {
             //vie--;
             console.log("lost");
-            if (vie == 0) {
+            if (vie < 0) {
                 display.gameOver();
                 break;
             } else {
