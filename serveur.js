@@ -40,11 +40,11 @@ var server = http.createServer(function (req, res) {
 
     var pagelue = '.' + page;
 
-    console.log('page lue : ' +pagelue + ', contentType : ' + contentType);
+    // console.log('page lue : ' +pagelue + ', contentType : ' + contentType);
 
     fs.readFile(pagelue, function (err, data) {
         if (err) {
-            console.log("erreur 404...");
+            // console.log("erreur 404...");
             return;
         }
         res.writeHead(200, {"Content-Type": contentType});
